@@ -22,7 +22,6 @@
 ../../verilog/decode_stage.sv
 ../../verilog/execute_stage.sv
 ../../verilog/clint.sv
-../../verilog/debug.sv
 ../../verilog/itim.sv
 ../../verilog/dtim.sv
 ../../verilog/cpu.sv
