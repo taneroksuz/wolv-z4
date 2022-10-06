@@ -70,10 +70,11 @@ module execute_stage
     v.store = d.d.store;
     v.fload = d.d.fload;
     v.nop = d.d.nop;
-    v.csregister = d.d.csregister;
+    v.csrreg = d.d.csrreg;
     v.division = d.d.division;
-    v.multiplication = d.d.multiplication;
-    v.bitmanipulation = d.d.bitmanipulation;
+    v.mult = d.d.mult;
+    v.bitm = d.d.bitm;
+    v.bitc = d.d.bitc;
     v.fence = d.d.fence;
     v.ecall = d.d.ecall;
     v.ebreak = d.d.ebreak;
@@ -151,9 +152,9 @@ module execute_stage
       v.wdata = v.npc;
     end else if (v.crden == 1) begin
       v.wdata = v.cdata;
-    end else if (v.multiplication == 1) begin
+    end else if (v.mult == 1) begin
       v.wdata = v.mdata;
-    end else if (v.bitmanipulation == 1) begin
+    end else if (v.bitm == 1) begin
       v.wdata = v.bdata;
     end else if (v.fpu == 1) begin
       v.wdata = v.fdata;
@@ -174,7 +175,7 @@ module execute_stage
 
     bit_clmul_in.rdata1 = v.rdata1;
     bit_clmul_in.rdata2 = v.rdata2;
-    bit_clmul_in.enable = v.bitmanipulation & ~(d.e.clear | d.e.stall);
+    bit_clmul_in.enable = v.bitm & ~(d.e.clear | d.e.stall);
     bit_clmul_in.op = v.bit_op.bit_zbc;
 
     fp_execute_in.data1 = v.frdata1;
@@ -198,7 +199,7 @@ module execute_stage
         v.wren = |v.waddr;
         v.wdata = div_out.result;
       end
-    end else if (v.bitmanipulation == 1 && v.bit_op.bmcycle == 1) begin
+    end else if (v.bitm == 1 && v.bitc == 1) begin
       if (bit_clmul_out.ready == 0) begin
         v.stall = 1;
       end else if (bit_clmul_out.ready == 1) begin
@@ -238,7 +239,7 @@ module execute_stage
       v.jalr = 0;
       v.branch = 0;
       v.nop = 0;
-      v.csregister = 0;
+      v.csrreg = 0;
       v.ecall = 0;
       v.ebreak = 0;
       v.mret = 0;
@@ -288,7 +289,8 @@ module execute_stage
 
     y.cwren = v.cwren;
     y.division = v.division;
-    y.bitmanipulation = v.bitmanipulation;
+    y.bitm = v.bitm;
+    y.bitc = v.bitc;
     y.fpu = v.fpu;
     y.fpuc = v.fpuc;
     y.fpuf = v.fpuf;
@@ -298,7 +300,8 @@ module execute_stage
 
     q.cwren = r.cwren;
     q.division = r.division;
-    q.bitmanipulation = r.bitmanipulation;
+    q.bitm = r.bitm;
+    q.bitc = r.bitc;
     q.fpu = r.fpu;
     q.fpuc = r.fpuc;
     q.fpuf = r.fpuf;

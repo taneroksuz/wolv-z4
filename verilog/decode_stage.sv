@@ -78,10 +78,11 @@ module decode_stage
     v.load = decoder_out.load;
     v.store = decoder_out.store;
     v.nop = decoder_out.nop;
-    v.csregister = decoder_out.csregister;
+    v.csrreg = decoder_out.csrreg;
     v.division = decoder_out.division;
-    v.multiplication = decoder_out.multiplication;
-    v.bitmanipulation = decoder_out.bitmanipulation;
+    v.mult = decoder_out.mult;
+    v.bitm = decoder_out.bitm;
+    v.bitc = decoder_out.bitc;
     v.alu_op = decoder_out.alu_op;
     v.bcu_op = decoder_out.bcu_op;
     v.lsu_op = decoder_out.lsu_op;
@@ -254,7 +255,7 @@ module decode_stage
       v.stall = 1;
     end else if (a.e.division == 1) begin
       v.stall = 1;
-    end else if (a.e.bitmanipulation == 1 && a.e.bit_op.bmcycle == 1) begin
+    end else if (a.e.bitm == 1 && a.e.bitc == 1) begin
       v.stall = 1;
     end else if (a.e.fpu == 1 && a.e.fpuc == 1) begin
       v.stall = 1;
@@ -276,10 +277,11 @@ module decode_stage
       v.fload = 0;
       v.fstore = 0;
       v.nop = 0;
-      v.csregister = 0;
+      v.csrreg = 0;
       v.division = 0;
-      v.multiplication = 0;
-      v.bitmanipulation = 0;
+      v.mult = 0;
+      v.bitm = 0;
+      v.bitc = 0;
       v.fence = 0;
       v.ecall = 0;
       v.ebreak = 0;
@@ -344,10 +346,11 @@ module decode_stage
     y.fload = v.fload;
     y.fstore = v.fstore;
     y.nop = v.nop;
-    y.csregister = v.csregister;
+    y.csrreg = v.csrreg;
     y.division = v.division;
-    y.multiplication = v.multiplication;
-    y.bitmanipulation = v.bitmanipulation;
+    y.mult = v.mult;
+    y.bitm = v.bitm;
+    y.bitc = v.bitc;
     y.fence = v.fence;
     y.ecall = v.ecall;
     y.ebreak = v.ebreak;
@@ -408,10 +411,11 @@ module decode_stage
     q.fload = r.fload;
     q.fstore = r.fstore;
     q.nop = r.nop;
-    q.csregister = r.csregister;
+    q.csrreg = r.csrreg;
     q.division = r.division;
-    q.multiplication = r.multiplication;
-    q.bitmanipulation = r.bitmanipulation;
+    q.mult = r.mult;
+    q.bitm = r.bitm;
+    q.bitc = r.bitc;
     q.fence = r.fence;
     q.ecall = r.ecall;
     q.ebreak = r.ebreak;
