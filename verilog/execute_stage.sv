@@ -19,8 +19,12 @@ module execute_stage
   output bit_alu_in_type bit_alu_in,
   input bit_clmul_out_type bit_clmul_out,
   output bit_clmul_in_type bit_clmul_in,
+  input fp_execute_out_type fp_execute_out,
+  output fp_execute_in_type fp_execute_in,
   output register_write_in_type register_win,
+  output fp_register_write_in_type fp_register_win,
   output forwarding_execute_in_type forwarding_ein,
+  output fp_forwarding_execute_in_type fp_forwarding_ein,
   input csr_out_type csr_out,
   output csr_execute_in_type csr_ein,
   input mem_out_type storebuffer_out,
@@ -47,9 +51,14 @@ module execute_stage
     v.rden2 = d.d.rden2;
     v.cwren = d.d.cwren;
     v.crden = d.d.crden;
+    v.fwren = d.d.fwren;
+    v.frden1 = d.d.frden1;
+    v.frden2 = d.d.frden2;
+    v.frden3 = d.d.frden3;
     v.waddr = d.d.waddr;
     v.raddr1 = d.d.raddr1;
     v.raddr2 = d.d.raddr2;
+    v.raddr3 = d.d.raddr3;
     v.caddr = d.d.caddr;
     v.auipc = d.d.auipc;
     v.lui = d.d.lui;
@@ -58,6 +67,8 @@ module execute_stage
     v.branch = d.d.branch;
     v.load = d.d.load;
     v.store = d.d.store;
+    v.store = d.d.store;
+    v.fload = d.d.fload;
     v.nop = d.d.nop;
     v.csregister = d.d.csregister;
     v.division = d.d.division;
@@ -68,10 +79,18 @@ module execute_stage
     v.ebreak = d.d.ebreak;
     v.mret = d.d.mret;
     v.wfi = d.d.wfi;
+    v.fmt = d.d.fmt;
+    v.rm = d.d.rm;
+    v.fpu = d.d.fpu;
+    v.fpuc = d.d.fpuc;
+    v.fpuf = d.d.fpuf;
     v.valid = d.d.valid;
     v.rdata1 = d.d.rdata1;
     v.rdata2 = d.d.rdata2;
     v.cdata = d.d.cdata;
+    v.frdata1 = d.d.frdata1;
+    v.frdata2 = d.d.frdata2;
+    v.frdata3 = d.d.frdata3;
     v.address = d.d.address;
     v.byteenable = d.d.byteenable;
     v.alu_op = d.d.alu_op;
@@ -81,9 +100,16 @@ module execute_stage
     v.div_op = d.d.div_op;
     v.mul_op = d.d.mul_op;
     v.bit_op = d.d.bit_op;
+    v.fpu_op = d.d.fpu_op;
     v.exception = d.d.exception;
     v.ecause = d.d.ecause;
     v.etval = d.d.etval;
+
+    if (v.fpu == 1) begin
+      if (v.rden1 == 1) begin
+        v.frdata1 = v.rdata1;
+      end
+    end
 
     if (d.e.stall == 1) begin
       v = r;
@@ -129,6 +155,8 @@ module execute_stage
       v.wdata = v.mdata;
     end else if (v.bitmanipulation == 1) begin
       v.wdata = v.bdata;
+    end else if (v.fpu == 1) begin
+      v.wdata = v.fdata;
     end
 
     csr_alu_in.cdata = v.cdata;
@@ -148,6 +176,14 @@ module execute_stage
     bit_clmul_in.rdata2 = v.rdata2;
     bit_clmul_in.enable = v.bitmanipulation & ~(d.e.clear | d.e.stall);
     bit_clmul_in.op = v.bit_op.bit_zbc;
+
+    fp_execute_in.data1 = v.frdata1;
+    fp_execute_in.data2 = v.frdata2;
+    fp_execute_in.data3 = v.frdata3;
+    fp_execute_in.fpu_op = v.fpu_op;
+    fp_execute_in.fmt = v.fmt;
+    fp_execute_in.rm = v.rm;
+    fp_execute_in.enable = v.fpu & ~(d.e.clear | d.e.stall);
 
     lsu_in.ldata = storebuffer_out.mem_rdata;
     lsu_in.byteenable = v.byteenable;
@@ -169,20 +205,33 @@ module execute_stage
         v.wren = |v.waddr;
         v.wdata = bit_clmul_out.result;
       end
+    end else if (v.fpu == 1) begin
+      if (fp_execute_out.ready == 0) begin
+        v.stall = 1;
+      end else if (fp_execute_out.ready == 1) begin
+        v.wren = v.fpu_op.fcmp | v.fpu_op.fclass | v.fpu_op.fmv_f2i | v.fpu_op.fcvt_f2i;
+        v.wdata = fp_execute_out.result;
+        v.fwren = ~v.wren;
+        v.fdata = fp_execute_out.result;
+        v.flags = fp_execute_out.flags;
+      end
     end
 
-    if (v.load == 1 | v.store == 1 | v.fence == 1) begin
+    if (v.load == 1 | v.store == 1 | v.fload == 1 | v.fstore == 1 | v.fence == 1) begin
       if (storebuffer_out.mem_ready == 0) begin
         v.stall = 1;
       end else if (storebuffer_out.mem_ready == 1) begin
         v.wren = v.load & |v.waddr;
         v.wdata = v.ldata;
+        v.fwren = v.fload;
+        v.fdata = v.ldata;
       end
     end
 
     if ((v.stall | v.clear | csr_out.exception | csr_out.mret) == 1) begin
       v.wren = 0;
       v.cwren = 0;
+      v.fwren = 0;
       v.auipc = 0;
       v.lui = 0;
       v.jal = 0;
@@ -210,14 +259,24 @@ module execute_stage
     register_win.waddr = v.waddr;
     register_win.wdata = v.wdata;
 
+    fp_register_win.wren = v.fwren;
+    fp_register_win.waddr = v.waddr;
+    fp_register_win.wdata = v.fdata;
+
     forwarding_ein.wren = v.wren;
     forwarding_ein.waddr = v.waddr;
     forwarding_ein.wdata = v.wdata;
+
+    fp_forwarding_ein.wren = v.fwren;
+    fp_forwarding_ein.waddr = v.waddr;
+    fp_forwarding_ein.wdata = v.fdata;
 
     csr_ein.valid = v.valid;
     csr_ein.cwren = v.cwren;
     csr_ein.cwaddr = v.caddr;
     csr_ein.cdata = v.cdata;
+    csr_ein.fpu = v.fpuf;
+    csr_ein.fflags = v.flags;
 
     csr_ein.mret = v.mret;
     csr_ein.exception = v.exception;
@@ -227,9 +286,23 @@ module execute_stage
 
     rin = v;
 
+    y.cwren = v.cwren;
+    y.division = v.division;
+    y.bitmanipulation = v.bitmanipulation;
+    y.fpu = v.fpu;
+    y.fpuc = v.fpuc;
+    y.fpuf = v.fpuf;
+    y.bit_op = v.bit_op;
     y.stall = v.stall;
     y.clear = v.clear;
 
+    q.cwren = r.cwren;
+    q.division = r.division;
+    q.bitmanipulation = r.bitmanipulation;
+    q.fpu = r.fpu;
+    q.fpuc = r.fpuc;
+    q.fpuf = r.fpuf;
+    q.bit_op = r.bit_op;
     q.stall = r.stall;
     q.clear = r.clear;
 

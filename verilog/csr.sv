@@ -18,6 +18,8 @@ module csr
 
   csr_machine_reg_type csr_machine_reg;
 
+  csr_user_reg_type csr_user_reg;
+
   logic [0:0] exception = 0;
   logic [0:0] mret = 0;
 
@@ -108,6 +110,9 @@ module csr
         csr_mcycleh : csr_out.cdata = csr_machine_reg.mcycle[63:32];
         csr_minstret : csr_out.cdata = csr_machine_reg.minstret[31:0];
         csr_minstreth : csr_out.cdata = csr_machine_reg.minstret[63:32];
+        csr_fflags : csr_out.cdata = {27'h0,csr_user_reg.fflags};
+        csr_frm : csr_out.cdata = {29'h0,csr_user_reg.frm};
+        csr_fcsr : csr_out.cdata = {24'h0,csr_user_reg.frm,csr_user_reg.fflags};
         default : csr_out.cdata = 0;
       endcase
     end else begin
@@ -122,6 +127,7 @@ module csr
     end else begin
       csr_out.mtvec = {csr_machine_reg.mtvec[31:2],2'b0};
     end
+    csr_out.frm = csr_user_reg.frm;
 
   end
 
@@ -129,6 +135,7 @@ module csr
 
     if (rst == 0) begin
       csr_machine_reg <= init_csr_machine_reg;
+      csr_user_reg <= init_csr_user_reg;
     end else begin
       if (csr_ein.cwren == 1) begin
         case (csr_ein.cwaddr)
@@ -179,12 +186,22 @@ module csr
           csr_mcycleh : csr_machine_reg.mcycle[63:32] <= csr_ein.cdata;
           csr_minstret : csr_machine_reg.minstret[31:0] <= csr_ein.cdata;
           csr_minstreth : csr_machine_reg.minstret[63:32] <= csr_ein.cdata;
+          csr_fflags : csr_user_reg.fflags <= csr_ein.cdata[4:0];
+          csr_frm : csr_user_reg.frm <= csr_ein.cdata[2:0];
+          csr_fcsr : begin
+            csr_user_reg.fflags <= csr_ein.cdata[4:0];
+            csr_user_reg.frm <= csr_ein.cdata[7:5];
+          end
           default :;
         endcase
       end
 
       if (csr_ein.valid == 1) begin
         csr_machine_reg.minstret <= csr_machine_reg.minstret + 1;
+      end
+
+      if (csr_ein.fpu == 1) begin
+        csr_user_reg.fflags <= csr_ein.fflags;
       end
 
       if (meip == 1) begin
