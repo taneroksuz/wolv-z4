@@ -27,6 +27,8 @@ module execute_stage
   output fp_forwarding_execute_in_type fp_forwarding_ein,
   input csr_out_type csr_out,
   output csr_execute_in_type csr_ein,
+  input fp_csr_out_type fp_csr_out,
+  output fp_csr_execute_in_type fp_csr_ein,
   input mem_out_type storebuffer_out,
   input execute_in_type a,
   input execute_in_type d,
@@ -276,14 +278,18 @@ module execute_stage
     csr_ein.cwren = v.cwren;
     csr_ein.cwaddr = v.caddr;
     csr_ein.cdata = v.cdata;
-    csr_ein.fpu = v.fpuf;
-    csr_ein.fflags = v.flags;
 
     csr_ein.mret = v.mret;
     csr_ein.exception = v.exception;
     csr_ein.epc = v.pc;
     csr_ein.ecause = v.ecause;
     csr_ein.etval = v.etval;
+
+    fp_csr_ein.cwren = v.cwren;
+    fp_csr_ein.cwaddr = v.caddr;
+    fp_csr_ein.cdata = v.cdata;
+    fp_csr_ein.fpu = v.fpuf;
+    fp_csr_ein.fflags = v.flags;
 
     rin = v;
 

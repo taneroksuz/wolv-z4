@@ -1108,14 +1108,23 @@ package wires;
   };
 
   typedef struct packed{
-    logic [2 : 0] frm;
-    logic [4 : 0] fflags;
-  } csr_user_reg_type;
+    logic [0  : 0] crden;
+    logic [11 : 0] craddr;
+  } fp_csr_decode_in_type;
 
-  parameter csr_user_reg_type init_csr_user_reg = '{
-    frm : 0,
-    fflags : 0
-  };
+  typedef struct packed{
+    logic [0  : 0] cwren;
+    logic [11 : 0] cwaddr;
+    logic [31 : 0] cdata;
+    logic [0  : 0] fpu;
+    logic [4  : 0] fflags;
+  } fp_csr_execute_in_type;
+
+  typedef struct packed{
+    logic [31 : 0] cdata;
+    logic [0  : 0] ready;
+    logic [2  : 0] frm;
+  } fp_csr_out_type;
 
   typedef struct packed{
     logic [0  : 0] crden;
@@ -1132,8 +1141,6 @@ package wires;
     logic [31 : 0] epc;
     logic [3  : 0] ecause;
     logic [31 : 0] etval;
-    logic [0  : 0] fpu;
-    logic [4  : 0] fflags;
   } csr_execute_in_type;
 
   typedef struct packed{
@@ -1143,7 +1150,6 @@ package wires;
     logic [31 : 0] mepc;
     logic [31 : 0] cdata;
     logic [1  : 0] fs;
-    logic [2  : 0] frm;
   } csr_out_type;
 
   typedef struct packed{
@@ -1213,6 +1219,8 @@ package wires;
     fp_execute_in_type fp_execute_in;
     fp_register_read_in_type fp_register_rin;
     fp_register_write_in_type fp_register_win;
+    fp_csr_decode_in_type fp_csr_din;
+    fp_csr_execute_in_type fp_csr_ein;
     fp_forwarding_register_in_type fp_forwarding_rin;
     fp_forwarding_execute_in_type fp_forwarding_ein;
   } fpu_in_type;
@@ -1221,6 +1229,7 @@ package wires;
     fp_decode_out_type fp_decode_out;
     fp_execute_out_type fp_execute_out;
     fp_register_out_type fp_register_out;
+    fp_csr_out_type fp_csr_out;
     fp_forwarding_out_type fp_forwarding_out;
   } fpu_out_type;
 

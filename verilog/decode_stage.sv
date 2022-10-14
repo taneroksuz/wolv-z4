@@ -22,6 +22,8 @@ module decode_stage
   input fp_register_out_type fp_register_out,
   input csr_out_type csr_out,
   output csr_decode_in_type csr_din,
+  input fp_csr_out_type fp_csr_out,
+  output fp_csr_decode_in_type fp_csr_din,
   input forwarding_out_type forwarding_out,
   output forwarding_register_in_type forwarding_rin,
   input fp_forwarding_out_type fp_forwarding_out,
@@ -179,7 +181,7 @@ module decode_stage
     */
 
     if (v.rm == 3'b111) begin
-      v.rm = csr_out.frm;
+      v.rm = fp_csr_out.frm;
     end
 
     v.npc = v.pc + ((v.instr[1:0] == 2'b11) ? 4 : 2);
@@ -338,7 +340,10 @@ module decode_stage
     csr_din.crden = v.crden;
     csr_din.craddr = v.caddr;
 
-    v.cdata = csr_out.cdata;
+    fp_csr_din.crden = v.crden;
+    fp_csr_din.craddr = v.caddr;
+
+    v.cdata = (fp_csr_out.ready == 1) ? fp_csr_out.cdata : csr_out.cdata;
 
     rin = v;
 

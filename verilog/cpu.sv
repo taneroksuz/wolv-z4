@@ -75,11 +75,14 @@ module cpu
   fp_execute_in_type fp_execute_in;
   fp_register_read_in_type fp_register_rin;
   fp_register_write_in_type fp_register_win;
+  fp_csr_decode_in_type fp_csr_din;
+  fp_csr_execute_in_type fp_csr_ein;
   fp_forwarding_register_in_type fp_forwarding_rin;
   fp_forwarding_execute_in_type fp_forwarding_ein;
   fp_decode_out_type fp_decode_out;
   fp_execute_out_type fp_execute_out;
   fp_register_out_type fp_register_out;
+  fp_csr_out_type fp_csr_out;
   fp_forwarding_out_type fp_forwarding_out;
   mem_in_type fetchbuffer_in;
   mem_out_type fetchbuffer_out;
@@ -98,12 +101,15 @@ module cpu
   assign fpu_in.fp_execute_in = fp_execute_in;
   assign fpu_in.fp_register_rin = fp_register_rin;
   assign fpu_in.fp_register_win = fp_register_win;
+  assign fpu_in.fp_csr_din = fp_csr_din;
+  assign fpu_in.fp_csr_ein = fp_csr_ein;
   assign fpu_in.fp_forwarding_rin = fp_forwarding_rin;
   assign fpu_in.fp_forwarding_ein = fp_forwarding_ein;
 
   assign fp_decode_out = fpu_out.fp_decode_out;
   assign fp_execute_out = fpu_out.fp_execute_out;
   assign fp_register_out = fpu_out.fp_register_out;
+  assign fp_csr_out = fpu_out.fp_csr_out;
   assign fp_forwarding_out = fpu_out.fp_forwarding_out;
 
   assign fetch_in_a.f = fetch_out_y;
@@ -284,6 +290,8 @@ module cpu
     .fp_forwarding_rin (fp_forwarding_rin),
     .csr_out (csr_out),
     .csr_din (csr_din),
+    .fp_csr_out (fp_csr_out),
+    .fp_csr_din (fp_csr_din),
     .storebuffer_in (storebuffer_in),
     .a (decode_in_a),
     .d (decode_in_d),
@@ -317,6 +325,8 @@ module cpu
     .fp_forwarding_ein (fp_forwarding_ein),
     .csr_out (csr_out),
     .csr_ein (csr_ein),
+    .fp_csr_out (fp_csr_out),
+    .fp_csr_ein (fp_csr_ein),
     .storebuffer_out (storebuffer_out),
     .a (execute_in_a),
     .d (execute_in_d),
