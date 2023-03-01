@@ -1,6 +1,6 @@
-# RISCV Z4 CPU #
+# Graywolv Z4 CPU core #
 
-RISCV Z4 CPU supports currently only riscv32-imfcb instruction set architecture and is implemented with 3-stage pipeline and Harvard bus architecture.
+Graywolv Z4 CPU core supports currently only riscv32-imfcb instruction set architecture and is implemented with 3-stage pipeline and Harvard bus architecture.
 
 ## Dhrystone Benchmark ##
 | Cycles | Dhrystone/s/MHz | DMIPS/s/MHz | Iteration |
