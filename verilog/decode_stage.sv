@@ -50,9 +50,9 @@ module decode_stage
     v.ecause = d.f.ecause;
     v.etval = d.f.etval;
 
-    // if ((d.d.stall | d.e.stall) == 1) begin
-    //   v = r;
-    // end
+    if ((d.d.stall | d.e.stall) == 1) begin
+      v = r;
+    end
 
     v.clear = d.d.jump | d.d.exception | d.d.mret | d.e.clear;
 
@@ -330,6 +330,7 @@ module decode_stage
 
     storebuffer_in.mem_valid = v.load | v.store | v.fload | v.fstore | v.fence;
     storebuffer_in.mem_fence = v.fence;
+    storebuffer_in.mem_spec = 0;
     storebuffer_in.mem_instr = 0;
     storebuffer_in.mem_addr = v.address;
     storebuffer_in.mem_wdata = store_data(v.sdata,v.lsu_op.lsu_sb,v.lsu_op.lsu_sh,v.lsu_op.lsu_sw);
