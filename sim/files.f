@@ -42,6 +42,7 @@
 ../../verilog/decode_stage.sv
 ../../verilog/execute_stage.sv
 ../../verilog/fpu.sv
+../../verilog/arbiter.sv
 ../../verilog/clint.sv
 ../../verilog/itim.sv
 ../../verilog/dtim.sv
