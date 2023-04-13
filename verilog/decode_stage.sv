@@ -28,7 +28,7 @@ module decode_stage
   output forwarding_register_in_type forwarding_rin,
   input fp_forwarding_out_type fp_forwarding_out,
   output fp_forwarding_register_in_type fp_forwarding_rin,
-  output mem_in_type storebuffer_in,
+  output mem_in_type dmem_in,
   input decode_in_type a,
   input decode_in_type d,
   output decode_out_type y,
@@ -328,13 +328,13 @@ module decode_stage
       v.sdata = v.frdata2;
     end
 
-    storebuffer_in.mem_valid = v.load | v.store | v.fload | v.fstore | v.fence;
-    storebuffer_in.mem_fence = v.fence;
-    storebuffer_in.mem_spec = 0;
-    storebuffer_in.mem_instr = 0;
-    storebuffer_in.mem_addr = v.address;
-    storebuffer_in.mem_wdata = store_data(v.sdata,v.lsu_op.lsu_sb,v.lsu_op.lsu_sh,v.lsu_op.lsu_sw);
-    storebuffer_in.mem_wstrb = ((v.load | v.fload) == 1) ? 4'h0 : v.byteenable;
+    dmem_in.mem_valid = v.load | v.store | v.fload | v.fstore | v.fence;
+    dmem_in.mem_fence = v.fence;
+    dmem_in.mem_spec = 0;
+    dmem_in.mem_instr = 0;
+    dmem_in.mem_addr = v.address;
+    dmem_in.mem_wdata = store_data(v.sdata,v.lsu_op.lsu_sb,v.lsu_op.lsu_sh,v.lsu_op.lsu_sw);
+    dmem_in.mem_wstrb = ((v.load | v.fload) == 1) ? 4'h0 : v.byteenable;
 
     csr_din.crden = v.crden;
     csr_din.craddr = v.caddr;

@@ -29,7 +29,7 @@ module execute_stage
   output csr_execute_in_type csr_ein,
   input fp_csr_out_type fp_csr_out,
   output fp_csr_execute_in_type fp_csr_ein,
-  input mem_out_type storebuffer_out,
+  input mem_out_type dmem_out,
   input execute_in_type a,
   input execute_in_type d,
   output execute_out_type y,
@@ -188,7 +188,7 @@ module execute_stage
     fp_execute_in.rm = v.rm;
     fp_execute_in.enable = v.fpu & ~(d.e.clear | d.e.stall);
 
-    lsu_in.ldata = storebuffer_out.mem_rdata;
+    lsu_in.ldata = dmem_out.mem_rdata;
     lsu_in.byteenable = v.byteenable;
     lsu_in.lsu_op = v.lsu_op;
 
@@ -221,9 +221,9 @@ module execute_stage
     end
 
     if (v.load == 1 | v.store == 1 | v.fload == 1 | v.fstore == 1 | v.fence == 1) begin
-      if (storebuffer_out.mem_ready == 0) begin
+      if (dmem_out.mem_ready == 0) begin
         v.stall = 1;
-      end else if (storebuffer_out.mem_ready == 1) begin
+      end else if (dmem_out.mem_ready == 1) begin
         v.wren = v.load & |v.waddr;
         v.wdata = v.ldata;
         v.fwren = v.fload;
