@@ -118,7 +118,7 @@ module execute_stage
       v = r;
     end
 
-    v.clear = d.e.clear;
+    v.clear = csr_out.trap | csr_out.mret | d.e.clear;
 
     v.stall = 0;
 
@@ -231,7 +231,7 @@ module execute_stage
       end
     end
 
-    if ((v.stall | v.clear | csr_out.trap | csr_out.mret) == 1) begin
+    if ((v.stall | v.clear) == 1) begin
       v.wren = 0;
       v.cwren = 0;
       v.fwren = 0;
