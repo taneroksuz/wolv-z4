@@ -293,6 +293,8 @@ module execute_stage
 
     rin = v;
 
+    y.pc = v.pc;
+    y.npc = v.npc;
     y.cwren = v.cwren;
     y.division = v.division;
     y.bitm = v.bitm;
@@ -301,9 +303,12 @@ module execute_stage
     y.fpuc = v.fpuc;
     y.fpuf = v.fpuf;
     y.bit_op = v.bit_op;
+    y.fence = v.fence;
     y.stall = v.stall;
     y.clear = v.clear;
 
+    q.pc = r.pc;
+    q.npc = r.npc;
     q.cwren = r.cwren;
     q.division = r.division;
     q.bitm = r.bitm;
@@ -312,6 +317,7 @@ module execute_stage
     q.fpuc = r.fpuc;
     q.fpuf = r.fpuf;
     q.bit_op = r.bit_op;
+    q.fence = r.fence;
     q.stall = r.stall;
     q.clear = r.clear;
 

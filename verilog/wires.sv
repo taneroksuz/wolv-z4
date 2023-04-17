@@ -537,12 +537,12 @@ package wires;
 
   typedef struct packed{
     logic [31 : 0] pc;
-    logic [0  : 0] stall;
   } fetch_out_type;
 
   typedef struct packed{
     logic [31 : 0] pc;
     logic [0  : 0] valid;
+    logic [0  : 0] fence;
     logic [0  : 0] spec;
     logic [0  : 0] stall;
   } fetch_reg_type;
@@ -550,6 +550,7 @@ package wires;
   parameter fetch_reg_type init_fetch_reg = '{
     pc : 0,
     valid : 0,
+    fence : 0,
     spec : 0,
     stall : 0
   };
@@ -764,6 +765,8 @@ package wires;
   };
 
   typedef struct packed{
+    logic [31 : 0] pc;
+    logic [31 : 0] npc;
     logic [0  : 0] cwren;
     logic [0  : 0] division;
     logic [0  : 0] bitm;
@@ -772,6 +775,7 @@ package wires;
     logic [0  : 0] fpuc;
     logic [0  : 0] fpuf;
     bit_op_type bit_op;
+    logic [0  : 0] fence;
     logic [0  : 0] stall;
     logic [0  : 0] clear;
   } execute_out_type;
