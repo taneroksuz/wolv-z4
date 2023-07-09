@@ -448,7 +448,7 @@ package wires;
     logic [0  : 0] store;
     logic [0  : 0] fload;
     logic [0  : 0] fstore;
-    logic [0  : 0] fpu;
+    logic [0  : 0] fpunit;
     alu_op_type alu_op;
     bcu_op_type bcu_op;
     lsu_op_type lsu_op;
@@ -472,7 +472,7 @@ package wires;
     logic [0  : 0] fstore;
     logic [1  : 0] fmt;
     logic [2  : 0] rm;
-    logic [0  : 0] fpu;
+    logic [0  : 0] fpunit;
     logic [0  : 0] fpuc;
     logic [0  : 0] fpuf;
     logic [0  : 0] valid;
@@ -595,7 +595,7 @@ package wires;
     logic [0  : 0] wfi;
     logic [1  : 0] fmt;
     logic [2  : 0] rm;
-    logic [0  : 0] fpu;
+    logic [0  : 0] fpunit;
     logic [0  : 0] fpuc;
     logic [0  : 0] fpuf;
     logic [0  : 0] valid;
@@ -663,7 +663,7 @@ package wires;
     logic [0  : 0] wfi;
     logic [1  : 0] fmt;
     logic [2  : 0] rm;
-    logic [0  : 0] fpu;
+    logic [0  : 0] fpunit;
     logic [0  : 0] fpuc;
     logic [0  : 0] fpuf;
     logic [0  : 0] valid;
@@ -734,7 +734,7 @@ package wires;
     wfi : 0,
     fmt : 0,
     rm : 0,
-    fpu : 0,
+    fpunit : 0,
     fpuc : 0,
     fpuf : 0,
     valid : 0,
@@ -771,7 +771,7 @@ package wires;
     logic [0  : 0] division;
     logic [0  : 0] bitm;
     logic [0  : 0] bitc;
-    logic [0  : 0] fpu;
+    logic [0  : 0] fpunit;
     logic [0  : 0] fpuc;
     logic [0  : 0] fpuf;
     bit_op_type bit_op;
@@ -820,7 +820,7 @@ package wires;
     logic [0  : 0] wfi;
     logic [1  : 0] fmt;
     logic [2  : 0] rm;
-    logic [0  : 0] fpu;
+    logic [0  : 0] fpunit;
     logic [0  : 0] fpuc;
     logic [0  : 0] fpuf;
     logic [0  : 0] valid;
@@ -893,7 +893,7 @@ package wires;
     wfi : 0,
     fmt : 0,
     rm : 0,
-    fpu : 0,
+    fpunit : 0,
     fpuc : 0,
     fpuf : 0,
     valid : 0,
@@ -1049,7 +1049,7 @@ package wires;
     logic [0  : 0] cwren;
     logic [11 : 0] cwaddr;
     logic [31 : 0] cdata;
-    logic [0  : 0] fpu;
+    logic [0  : 0] fpunit;
     logic [4  : 0] fflags;
   } fp_csr_execute_in_type;
 

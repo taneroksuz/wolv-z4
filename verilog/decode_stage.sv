@@ -84,7 +84,7 @@ module decode_stage
     v.fstore = 0;
     v.fmt = 0;
     v.rm = 0;
-    v.fpu = 0;
+    v.fpunit = 0;
     v.fpuc = 0;
     v.fpuf = 0;
     v.fpu_op = init_fp_operation;
@@ -146,7 +146,7 @@ module decode_stage
       v.store = compress_out.store;
       v.fload = compress_out.fload;
       v.fstore = compress_out.fstore;
-      v.fpu = compress_out.fpu;
+      v.fpunit = compress_out.fpunit;
       v.alu_op = compress_out.alu_op;
       v.bcu_op = compress_out.bcu_op;
       v.lsu_op = compress_out.lsu_op;
@@ -168,7 +168,7 @@ module decode_stage
       v.fstore = fp_decode_out.fstore;
       v.fmt = fp_decode_out.fmt;
       v.rm = fp_decode_out.rm;
-      v.fpu = fp_decode_out.fpu;
+      v.fpunit = fp_decode_out.fpunit;
       v.fpuc = fp_decode_out.fpuc;
       v.fpuf = fp_decode_out.fpuf;
       v.valid = fp_decode_out.valid;
@@ -185,7 +185,7 @@ module decode_stage
       v.fstore = 0;
       v.fmt = 0;
       v.rm = 0;
-      v.fpu = 0;
+      v.fpunit = 0;
       v.fpuc = 0;
       v.fpuf = 0;
     end
@@ -294,9 +294,9 @@ module decode_stage
       v.stall = 1;
     end else if (a.e.bitm == 1 && a.e.bitc == 1) begin
       v.stall = 1;
-    end else if (a.e.fpu == 1 && a.e.fpuc == 1) begin
+    end else if (a.e.fpunit == 1 && a.e.fpuc == 1) begin
       v.stall = 1;
-    end else if (a.e.fpu == 1 && a.e.fpuf == 1 && v.crden == 1 && (v.caddr == csr_fflags || v.caddr == csr_fcsr)) begin
+    end else if (a.e.fpunit == 1 && a.e.fpuf == 1 && v.crden == 1 && (v.caddr == csr_fflags || v.caddr == csr_fcsr)) begin
       v.stall = 1;
     end
 
@@ -324,7 +324,7 @@ module decode_stage
       v.ebreak = 0;
       v.mret = 0;
       v.wfi = 0;
-      v.fpu = 0;
+      v.fpunit = 0;
       v.fpuc = 0;
       v.fpuf = 0;
       v.valid = 0;
@@ -399,7 +399,7 @@ module decode_stage
     y.wfi = v.wfi;
     y.fmt = v.fmt;
     y.rm = v.rm;
-    y.fpu = v.fpu;
+    y.fpunit = v.fpunit;
     y.fpuc = v.fpuc;
     y.fpuf = v.fpuf;
     y.valid = v.valid;
@@ -464,7 +464,7 @@ module decode_stage
     q.wfi = r.wfi;
     q.fmt = r.fmt;
     q.rm = r.rm;
-    q.fpu = r.fpu;
+    q.fpunit = r.fpunit;
     q.fpuc = r.fpuc;
     q.fpuf = r.fpuf;
     q.valid = r.valid;

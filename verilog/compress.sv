@@ -47,7 +47,7 @@ module compress
   logic [0  : 0] frden3;
   logic [0  : 0] fload;
   logic [0  : 0] fstore;
-  logic [0  : 0] fpu;
+  logic [0  : 0] fpunit;
 
   logic [0  : 0] lui;
   logic [0  : 0] jal;
@@ -111,7 +111,7 @@ module compress
     frden3 = 0;
     fload = 0;
     fstore = 0;
-    fpu = 0;
+    fpunit = 0;
 
     lui = 0;
     jal = 0;
@@ -163,7 +163,7 @@ module compress
             fwren = 1;
             rden1 = 1;
             fload = 1;
-            // fpu = 1;
+            // fpunit = 1;
             lsu_op.lsu_lw = 1;
           end
           c0_sw : begin
@@ -182,7 +182,7 @@ module compress
             rden1 = 1;
             frden2 = 1;
             fstore = 1;
-            // fpu = 1;
+            // fpunit = 1;
             lsu_op.lsu_sw = 1;
           end
           default : valid = 0;
@@ -328,7 +328,7 @@ module compress
             rden1 = 1;
             raddr1 = 2;
             fload = 1;
-            // fpu = 1;
+            // fpunit = 1;
             lsu_op.lsu_lw = 1;
           end
           c2_alu : begin
@@ -382,7 +382,7 @@ module compress
             frden2 = 1;
             raddr1 = 2;
             fstore = 1;
-            // fpu = 1;
+            // fpunit = 1;
             lsu_op.lsu_sw = 1;
           end
           default : valid = 0;
@@ -410,7 +410,7 @@ module compress
     compress_out.store = store;
     compress_out.fload = fload;
     compress_out.fstore = fstore;
-    compress_out.fpu = fpu;
+    compress_out.fpunit = fpunit;
     compress_out.ebreak = ebreak;
     compress_out.valid = valid;
     compress_out.alu_op = alu_op;

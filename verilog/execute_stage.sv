@@ -84,7 +84,7 @@ module execute_stage
     v.wfi = d.d.wfi;
     v.fmt = d.d.fmt;
     v.rm = d.d.rm;
-    v.fpu = d.d.fpu;
+    v.fpunit = d.d.fpunit;
     v.fpuc = d.d.fpuc;
     v.fpuf = d.d.fpuf;
     v.valid = d.d.valid;
@@ -108,7 +108,7 @@ module execute_stage
     v.ecause = d.d.ecause;
     v.etval = d.d.etval;
 
-    if (v.fpu == 1) begin
+    if (v.fpunit == 1) begin
       if (v.rden1 == 1) begin
         v.frdata1 = v.rdata1;
       end
@@ -158,7 +158,7 @@ module execute_stage
       v.wdata = v.mdata;
     end else if (v.bitm == 1) begin
       v.wdata = v.bdata;
-    end else if (v.fpu == 1) begin
+    end else if (v.fpunit == 1) begin
       v.wdata = v.fdata;
     end
 
@@ -186,7 +186,7 @@ module execute_stage
     fp_execute_in.fpu_op = v.fpu_op;
     fp_execute_in.fmt = v.fmt;
     fp_execute_in.rm = v.rm;
-    fp_execute_in.enable = v.fpu & ~(d.e.clear | d.e.stall);
+    fp_execute_in.enable = v.fpunit & ~(d.e.clear | d.e.stall);
 
     lsu_in.ldata = dmem_out.mem_rdata;
     lsu_in.byteenable = v.byteenable;
@@ -208,7 +208,7 @@ module execute_stage
         v.wren = |v.waddr;
         v.wdata = bit_clmul_out.result;
       end
-    end else if (v.fpu == 1) begin
+    end else if (v.fpunit == 1) begin
       if (fp_execute_out.ready == 0) begin
         v.stall = 1;
       end else if (fp_execute_out.ready == 1) begin
@@ -288,7 +288,7 @@ module execute_stage
     fp_csr_ein.cwren = v.cwren;
     fp_csr_ein.cwaddr = v.caddr;
     fp_csr_ein.cdata = v.cdata;
-    fp_csr_ein.fpu = v.fpuf;
+    fp_csr_ein.fpunit = v.fpuf;
     fp_csr_ein.fflags = v.flags;
 
     rin = v;
@@ -299,7 +299,7 @@ module execute_stage
     y.division = v.division;
     y.bitm = v.bitm;
     y.bitc = v.bitc;
-    y.fpu = v.fpu;
+    y.fpunit = v.fpunit;
     y.fpuc = v.fpuc;
     y.fpuf = v.fpuf;
     y.bit_op = v.bit_op;
@@ -313,7 +313,7 @@ module execute_stage
     q.division = r.division;
     q.bitm = r.bitm;
     q.bitc = r.bitc;
-    q.fpu = r.fpu;
+    q.fpunit = r.fpunit;
     q.fpuc = r.fpuc;
     q.fpuf = r.fpuf;
     q.bit_op = r.bit_op;
