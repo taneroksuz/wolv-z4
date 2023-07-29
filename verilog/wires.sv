@@ -537,6 +537,25 @@ package wires;
 
   typedef struct packed{
     logic [31 : 0] pc;
+    logic [63 : 0] rdata;
+    logic [0  : 0] ready;
+    logic [0  : 0] align;
+    logic [0  : 0] clear;
+    logic [0  : 0] stall;
+  } buffer_in_type;
+
+  typedef struct packed{
+    logic [31 : 0] pc0;
+    logic [31 : 0] pc1;
+    logic [31 : 0] instr0;
+    logic [31 : 0] instr1;
+    logic [0  : 0] ready0;
+    logic [0  : 0] ready1;
+    logic [0  : 0] stall;
+  } buffer_out_type;
+
+  typedef struct packed{
+    logic [31 : 0] pc;
   } fetch_out_type;
 
   typedef struct packed{
