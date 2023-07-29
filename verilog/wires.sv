@@ -567,6 +567,7 @@ package wires;
     logic [0  : 0] valid;
     logic [0  : 0] fence;
     logic [0  : 0] spec;
+    logic [1  : 0] state;
     logic [0  : 0] stall;
   } fetch_reg_type;
 
@@ -580,6 +581,7 @@ package wires;
     valid : 0,
     fence : 0,
     spec : 0,
+    state : 0,
     stall : 0
   };
 
