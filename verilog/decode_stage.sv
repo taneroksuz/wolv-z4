@@ -28,7 +28,6 @@ module decode_stage
   output forwarding_register_in_type forwarding_rin,
   input fp_forwarding_out_type fp_forwarding_out,
   output fp_forwarding_register_in_type fp_forwarding_rin,
-  input mem_out_type imem_out,
   output mem_in_type dmem_in,
   input decode_in_type a,
   input decode_in_type d,
@@ -44,31 +43,15 @@ module decode_stage
   always_comb begin
 
     v = r;
+    
+    v.pc = a.f.done ? a.f.pc : 0;
+    v.instr = a.f.done ? a.f.instr : nop_instr;
 
-    v.pc = d.f.pc;
+    v.npc = v.pc + ((&v.instr[1:0]) ? 4 : 2);
 
-    //if ((d.d.stall | d.e.stall) == 1) begin
-    //  v = r;
-    //end
+    v.stall = 0;
 
     v.clear = csr_out.trap | csr_out.mret | d.e.fence | d.d.jump | d.e.clear;
-
-    if (imem_out.mem_ready == 1) begin
-      v.instr = imem_out.mem_rdata;
-      v.stall = 0;
-      if (v.busy == 1) begin
-        v.instr = nop_instr;
-        v.stall = 1;
-        v.busy = 0;
-      end
-    end else if (v.busy == 0) begin
-      v.instr = nop_instr;
-      v.stall = 1;
-      v.busy = v.clear;
-    end else begin
-      v.instr = nop_instr;
-      v.stall = 1;
-    end
 
     v.waddr = v.instr[11:7];
     v.raddr1 = v.instr[19:15];
@@ -192,10 +175,6 @@ module decode_stage
 
     if (v.rm == 3'b111) begin
       v.rm = fp_csr_out.frm;
-    end
-
-    if (v.stall == 0) begin
-      v.npc = v.pc + ((v.instr[1:0] == 2'b11) ? 4 : 2);
     end
 
     register_rin.rden1 = v.rden1;
