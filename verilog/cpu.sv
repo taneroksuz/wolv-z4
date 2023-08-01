@@ -86,8 +86,6 @@ module cpu
   fp_register_out_type fp_register_out;
   fp_csr_out_type fp_csr_out;
   fp_forwarding_out_type fp_forwarding_out;
-  mem_in_type fetchbuffer_in;
-  mem_out_type fetchbuffer_out;
   mem_in_type storebuffer_in;
   mem_out_type storebuffer_out;
   mem_in_type itim_in;
