@@ -537,7 +537,7 @@ package wires;
 
   typedef struct packed{
     logic [31 : 0] pc;
-    logic [63 : 0] rdata;
+    logic [31 : 0] rdata;
     logic [0  : 0] ready;
     logic [0  : 0] align;
     logic [0  : 0] clear;

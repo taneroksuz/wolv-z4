@@ -1,6 +1,7 @@
 import constants::*;
 import wires::*;
 import functions::*;
+import fp_wire::*;
 
 module decode_stage
 (
