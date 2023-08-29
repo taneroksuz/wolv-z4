@@ -10,6 +10,6 @@ Wolv Z4 CPU core supports currently only riscv32-imfcb instruction set architect
 ## Coremark Benchmark ##
 | Cycles | Iteration/s/MHz | Iteration |
 | ------ | --------------- | --------- |
-| 291255 |            3.43 |        10 |
+| 287315 |            3.48 |        10 |
 
 Documentation will be expanded in the future.
