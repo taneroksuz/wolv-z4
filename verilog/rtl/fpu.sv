@@ -627,7 +627,7 @@ module fpu
 
   generate
 
-    if (fpu_enable == 1) begin
+    if (fpu_enable == 1) begin : fpu_generate
 
       fpu_decode fpu_decode_comp
       (
