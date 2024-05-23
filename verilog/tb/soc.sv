@@ -120,6 +120,7 @@ module soc();
         @(posedge clock);
         if (soc.cpu_comp.register_comp.register_win.wren == 1) begin
           $fwrite(reg_file,"PERIOD = %t\t",$time);
+          $fwrite(reg_file,"PC = %x\t",soc.cpu_comp.execute_stage_comp.d.d.instr.pc);
           $fwrite(reg_file,"WADDR = %d\t",soc.cpu_comp.register_comp.register_win.waddr);
           $fwrite(reg_file,"WDATA = %x\n",soc.cpu_comp.register_comp.register_win.wdata);
         end
@@ -136,6 +137,7 @@ module soc();
         @(posedge clock);
         if (soc.cpu_comp.csr_comp.csr_ein.cwren == 1) begin
           $fwrite(csr_file,"PERIOD = %t\t",$time);
+          $fwrite(csr_file,"PC = %x\t",soc.cpu_comp.execute_stage_comp.d.d.instr.pc);
           $fwrite(csr_file,"WADDR = %x\t",soc.cpu_comp.csr_comp.csr_ein.cwaddr);
           $fwrite(csr_file,"WDATA = %x\n",soc.cpu_comp.csr_comp.csr_ein.cdata);
         end
@@ -153,6 +155,7 @@ module soc();
         if (soc.bram_comp.bram_valid == 1) begin
           if (|soc.bram_comp.bram_wstrb == 1) begin
             $fwrite(mem_file,"PERIOD = %t\t",$time);
+            $fwrite(mem_file,"PC = %x\t",soc.cpu_comp.execute_stage_comp.d.d.instr.pc);
             $fwrite(mem_file,"WADDR = %x\t",soc.bram_comp.bram_addr);
             $fwrite(mem_file,"WSTRB = %b\t",soc.bram_comp.bram_wstrb);
             $fwrite(mem_file,"WDATA = %x\n",soc.bram_comp.bram_wdata);
@@ -171,6 +174,7 @@ module soc();
         @(posedge clock);
         if (soc.cpu_comp.fpu_comp.fpu_generate.fpu_register_comp.fp_register_win.wren == 1) begin
           $fwrite(freg_file,"PERIOD = %t\t",$time);
+          $fwrite(freg_file,"PC = %x\t",soc.cpu_comp.execute_stage_comp.d.d.instr.pc);
           $fwrite(freg_file,"WADDR = %d\t",soc.cpu_comp.fpu_comp.fpu_generate.fpu_register_comp.fp_register_win.waddr);
           $fwrite(freg_file,"WDATA = %x\n",soc.cpu_comp.fpu_comp.fpu_generate.fpu_register_comp.fp_register_win.wdata);
         end
