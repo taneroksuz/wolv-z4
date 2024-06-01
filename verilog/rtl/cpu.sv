@@ -89,10 +89,6 @@ module cpu
   fp_forwarding_out_type fp_forwarding_out;
   mem_in_type storebuffer_in;
   mem_out_type storebuffer_out;
-  mem_in_type itim_in;
-  mem_out_type itim_out;
-  mem_in_type dtim_in;
-  mem_out_type dtim_out;
   mem_in_type imem_in;
   mem_out_type imem_out;
   mem_in_type dmem_in;
@@ -249,8 +245,8 @@ module cpu
     .buffer_out (buffer_out),
     .buffer_in (buffer_in),
     .csr_out (csr_out),
-    .imem_out (itim_out),
-    .imem_in (itim_in),
+    .imem_out (imem_out),
+    .imem_in (imem_in),
     .a (fetch_in_a),
     .d (fetch_in_d),
     .y (fetch_out_y),
@@ -283,7 +279,7 @@ module cpu
     .csr_din (csr_din),
     .fp_csr_out (fp_csr_out),
     .fp_csr_din (fp_csr_din),
-    .dmem_in (dtim_in),
+    .dmem_in (dmem_in),
     .a (decode_in_a),
     .d (decode_in_d),
     .y (decode_out_y),
@@ -318,31 +314,11 @@ module cpu
     .csr_ein (csr_ein),
     .fp_csr_out (fp_csr_out),
     .fp_csr_ein (fp_csr_ein),
-    .dmem_out (dtim_out),
+    .dmem_out (dmem_out),
     .a (execute_in_a),
     .d (execute_in_d),
     .y (execute_out_y),
     .q (execute_out_q)
-  );
-
-  itim itim_comp
-  (
-    .reset (reset),
-    .clock (clock),
-    .itim_in (itim_in),
-    .itim_out (itim_out),
-    .imem_out (imem_out),
-    .imem_in (imem_in)
-  );
-
-  dtim dtim_comp
-  (
-    .reset (reset),
-    .clock (clock),
-    .dtim_in (dtim_in),
-    .dtim_out (dtim_out),
-    .dmem_out (dmem_out),
-    .dmem_in (dmem_in)
   );
 
   fpu#(
@@ -357,17 +333,19 @@ module cpu
 
   assign imemory_valid = imem_in.mem_valid;
   assign imemory_instr = imem_in.mem_instr;
-  assign imemory_addr = imem_in.mem_addr;
+  assign imemory_addr  = imem_in.mem_addr;
   assign imemory_wdata = imem_in.mem_wdata;
   assign imemory_wstrb = imem_in.mem_wstrb;
+
   assign imem_out.mem_rdata = imemory_rdata;
   assign imem_out.mem_ready = imemory_ready;
 
   assign dmemory_valid = dmem_in.mem_valid;
   assign dmemory_instr = dmem_in.mem_instr;
-  assign dmemory_addr = dmem_in.mem_addr;
+  assign dmemory_addr  = dmem_in.mem_addr;
   assign dmemory_wdata = dmem_in.mem_wdata;
   assign dmemory_wstrb = dmem_in.mem_wstrb;
+
   assign dmem_out.mem_rdata = dmemory_rdata;
   assign dmem_out.mem_ready = dmemory_ready;
 
