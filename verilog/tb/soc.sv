@@ -271,6 +271,7 @@ module soc();
         if ((soc.cpu_comp.execute_stage_comp.a.e.instr.op.store | soc.cpu_comp.execute_stage_comp.a.e.instr.op.fstore) == 1) begin
           if (|soc.cpu_comp.execute_stage_comp.a.e.instr.byteenable == 1) begin
             $fwrite(mem_file,"PERIOD = %t\t",$time);
+            $fwrite(mem_file,"PC = %x\t",soc.cpu_comp.execute_stage_comp.a.e.instr.pc);
             $fwrite(mem_file,"WADDR = %x\t",soc.cpu_comp.execute_stage_comp.a.e.instr.address);
             $fwrite(mem_file,"WSTRB = %b\t",soc.cpu_comp.execute_stage_comp.a.e.instr.byteenable);
             $fwrite(mem_file,"WDATA = %x\n",soc.cpu_comp.execute_stage_comp.a.e.instr.sdata);
@@ -290,7 +291,7 @@ module soc();
         if (soc.cpu_comp.execute_stage_comp.a.e.instr.op.fwren == 1) begin
           $fwrite(freg_file,"PERIOD = %t\t",$time);
           $fwrite(freg_file,"PC = %x\t",soc.cpu_comp.execute_stage_comp.a.e.instr.pc);
-          $fwrite(freg_file,"WADDR = %d\t",soc.cpu_comp.execute_stage_comp.a.e.instr.waddr);
+          $fwrite(freg_file,"WADDR = %x\t",soc.cpu_comp.execute_stage_comp.a.e.instr.waddr);
           $fwrite(freg_file,"WDATA = %x\n",soc.cpu_comp.execute_stage_comp.a.e.instr.fdata);
         end
       end
