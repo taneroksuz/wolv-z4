@@ -217,6 +217,8 @@ module decode_stage
     v.instr.frdata2 = fp_forwarding_out.data2;
     v.instr.frdata3 = fp_forwarding_out.data3;
 
+    v.instr.sdata = (v.instr.op.fstore == 1) ? v.instr.frdata2 : v.instr.rdata2;
+
     bcu_in.rdata1 = v.instr.rdata1;
     bcu_in.rdata2 = v.instr.rdata2;
     bcu_in.bcu_op = v.instr.bcu_op;
