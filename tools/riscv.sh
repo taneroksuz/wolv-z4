@@ -29,6 +29,6 @@ mkdir build
 cd build
 
 ../configure --prefix=$PREFIX --disable-linux --with-arch=rv32imfc_zba_zbb_zbc_zbs \
-             --with-abi=ilp32
+             --with-abi=ilp32f
 
 make -j$(nproc) newlib
