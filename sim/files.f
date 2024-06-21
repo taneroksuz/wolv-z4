@@ -40,6 +40,7 @@ $BASEDIR/verilog/rtl/fetch_stage.sv
 $BASEDIR/verilog/rtl/decode_stage.sv
 $BASEDIR/verilog/rtl/execute_stage.sv
 $BASEDIR/verilog/rtl/fpu.sv
+$BASEDIR/verilog/rtl/clk_div.sv
 $BASEDIR/verilog/rtl/arbiter.sv
 $BASEDIR/verilog/rtl/ccd.sv
 $BASEDIR/verilog/rtl/clint.sv
