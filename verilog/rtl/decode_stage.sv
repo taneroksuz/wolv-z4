@@ -3,48 +3,46 @@ import wires::*;
 import functions::*;
 import fp_wire::*;
 
-module decode_stage
-(
-  input logic reset,
-  input logic clock,
-  input decoder_out_type decoder_out,
-  output decoder_in_type decoder_in,
-  input compress_out_type compress_out,
-  output compress_in_type compress_in,
-  input fp_decode_out_type fp_decode_out,
-  output fp_decode_in_type fp_decode_in,
-  input agu_out_type agu_out,
-  output agu_in_type agu_in,
-  input bcu_out_type bcu_out,
-  output bcu_in_type bcu_in,
-  input register_out_type register_out,
-  output register_read_in_type register_rin,
-  output fp_register_read_in_type fp_register_rin,
-  input fp_register_out_type fp_register_out,
-  input csr_out_type csr_out,
-  output csr_decode_in_type csr_din,
-  input fp_csr_out_type fp_csr_out,
-  output fp_csr_decode_in_type fp_csr_din,
-  input forwarding_out_type forwarding_out,
-  output forwarding_register_in_type forwarding_rin,
-  input fp_forwarding_out_type fp_forwarding_out,
-  output fp_forwarding_register_in_type fp_forwarding_rin,
-  output mem_in_type dmem_in,
-  input decode_in_type a,
-  input decode_in_type d,
-  output decode_out_type y,
-  output decode_out_type q
+module decode_stage (
+    input logic reset,
+    input logic clock,
+    input decoder_out_type decoder_out,
+    output decoder_in_type decoder_in,
+    input compress_out_type compress_out,
+    output compress_in_type compress_in,
+    input fp_decode_out_type fp_decode_out,
+    output fp_decode_in_type fp_decode_in,
+    input agu_out_type agu_out,
+    output agu_in_type agu_in,
+    input bcu_out_type bcu_out,
+    output bcu_in_type bcu_in,
+    input register_out_type register_out,
+    output register_read_in_type register_rin,
+    output fp_register_read_in_type fp_register_rin,
+    input fp_register_out_type fp_register_out,
+    input csr_out_type csr_out,
+    output csr_decode_in_type csr_din,
+    input fp_csr_out_type fp_csr_out,
+    output fp_csr_decode_in_type fp_csr_din,
+    input forwarding_out_type forwarding_out,
+    output forwarding_register_in_type forwarding_rin,
+    input fp_forwarding_out_type fp_forwarding_out,
+    output fp_forwarding_register_in_type fp_forwarding_rin,
+    output mem_in_type dmem_in,
+    input decode_in_type a,
+    input decode_in_type d,
+    output decode_out_type y,
+    output decode_out_type q
 );
-  timeunit 1ns;
-  timeprecision 1ps;
+  timeunit 1ns; timeprecision 1ps;
 
-  decode_reg_type r,rin;
+  decode_reg_type r, rin;
   decode_reg_type v;
 
   always_comb begin
 
     v = r;
-    
+
     v.instr.pc = a.f.done ? a.f.pc : 0;
     v.instr.instr = a.f.done ? a.f.instr : nop_instr;
 
@@ -244,12 +242,12 @@ module decode_stage
 
     if (v.instr.op.exception == 1) begin
       if ((v.instr.op.load | v.instr.op.fload) == 1) begin
-        v.instr.op.load = 0;
-        v.instr.op.wren = 0;
+        v.instr.op.load  = 0;
+        v.instr.op.wren  = 0;
         v.instr.op.fload = 0;
         v.instr.op.fwren = 0;
       end else if ((v.instr.op.store | v.instr.op.fstore) == 1) begin
-        v.instr.op.store = 0;
+        v.instr.op.store  = 0;
         v.instr.op.fstore = 0;
       end else if (v.instr.op.jump == 1) begin
         v.instr.op.jump = 0;
@@ -304,7 +302,8 @@ module decode_stage
     dmem_in.mem_spec = 0;
     dmem_in.mem_instr = 0;
     dmem_in.mem_addr = v.instr.address;
-    dmem_in.mem_wdata = store_data(v.instr.sdata,v.instr.lsu_op.lsu_sb,v.instr.lsu_op.lsu_sh,v.instr.lsu_op.lsu_sw);
+    dmem_in.mem_wdata = store_data(v.instr.sdata, v.instr.lsu_op.lsu_sb, v.instr.lsu_op.lsu_sh,
+                                   v.instr.lsu_op.lsu_sw);
     dmem_in.mem_wstrb = ((v.instr.op.load | v.instr.op.fload) == 1) ? 4'h0 : v.instr.byteenable;
 
     csr_din.crden = v.instr.op.crden;

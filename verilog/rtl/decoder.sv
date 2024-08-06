@@ -1,13 +1,11 @@
 import constants::*;
 import wires::*;
 
-module decoder
-(
-  input decoder_in_type decoder_in,
-  output decoder_out_type decoder_out
+module decoder (
+    input  decoder_in_type  decoder_in,
+    output decoder_out_type decoder_out
 );
-  timeunit 1ns;
-  timeprecision 1ps;
+  timeunit 1ns; timeprecision 1ps;
 
   logic [31 : 0] instr;
 
@@ -19,43 +17,43 @@ module decoder
   logic [31 : 0] imm_j;
   logic [31 : 0] imm;
 
-  logic [4  : 0] shamt;
+  logic [4 : 0] shamt;
 
-  logic [6  : 0] opcode;
-  logic [2  : 0] funct3;
-  logic [4  : 0] funct5;
-  logic [6  : 0] funct7;
+  logic [6 : 0] opcode;
+  logic [2 : 0] funct3;
+  logic [4 : 0] funct5;
+  logic [6 : 0] funct7;
 
-  logic [4  : 0] waddr;
-  logic [4  : 0] raddr1;
+  logic [4 : 0] waddr;
+  logic [4 : 0] raddr1;
   logic [11 : 0] caddr;
 
-  logic [0  : 0] wren;
-  logic [0  : 0] rden1;
-  logic [0  : 0] rden2;
+  logic [0 : 0] wren;
+  logic [0 : 0] rden1;
+  logic [0 : 0] rden2;
 
-  logic [0  : 0] cwren;
-  logic [0  : 0] crden;
+  logic [0 : 0] cwren;
+  logic [0 : 0] crden;
 
-  logic [0  : 0] auipc;
-  logic [0  : 0] lui;
-  logic [0  : 0] jal;
-  logic [0  : 0] jalr;
-  logic [0  : 0] branch;
-  logic [0  : 0] load;
-  logic [0  : 0] store;
-  logic [0  : 0] nop;
-  logic [0  : 0] csreg;
-  logic [0  : 0] division;
-  logic [0  : 0] mult;
-  logic [0  : 0] bitm;
-  logic [0  : 0] bitc;
-  logic [0  : 0] fence;
-  logic [0  : 0] ecall;
-  logic [0  : 0] ebreak;
-  logic [0  : 0] mret;
-  logic [0  : 0] wfi;
-  logic [0  : 0] valid;
+  logic [0 : 0] auipc;
+  logic [0 : 0] lui;
+  logic [0 : 0] jal;
+  logic [0 : 0] jalr;
+  logic [0 : 0] branch;
+  logic [0 : 0] load;
+  logic [0 : 0] store;
+  logic [0 : 0] nop;
+  logic [0 : 0] csreg;
+  logic [0 : 0] division;
+  logic [0 : 0] mult;
+  logic [0 : 0] bitm;
+  logic [0 : 0] bitc;
+  logic [0 : 0] fence;
+  logic [0 : 0] ecall;
+  logic [0 : 0] ebreak;
+  logic [0 : 0] mret;
+  logic [0 : 0] wfi;
+  logic [0 : 0] valid;
 
   alu_op_type alu_op;
   bcu_op_type bcu_op;
@@ -66,26 +64,26 @@ module decoder
   mul_op_type mul_op;
   bit_op_type bit_op;
 
-  logic [0  : 0] nonzero_waddr;
-  logic [0  : 0] nonzero_raddr1;
+  logic [0 : 0] nonzero_waddr;
+  logic [0 : 0] nonzero_raddr1;
 
-  logic [0  : 0] nonzero_imm_c;
-  logic [0  : 0] nonzero_imm_i;
-  logic [0  : 0] nonzero_imm_s;
-  logic [0  : 0] nonzero_imm_b;
-  logic [0  : 0] nonzero_imm_u;
-  logic [0  : 0] nonzero_imm_j;
+  logic [0 : 0] nonzero_imm_c;
+  logic [0 : 0] nonzero_imm_i;
+  logic [0 : 0] nonzero_imm_s;
+  logic [0 : 0] nonzero_imm_b;
+  logic [0 : 0] nonzero_imm_u;
+  logic [0 : 0] nonzero_imm_j;
 
   always_comb begin
 
     instr = decoder_in.instr;
 
-    imm_c = {27'h0,instr[19:15]};
-    imm_i = {{20{instr[31]}},instr[31:20]};
-    imm_s = {{20{instr[31]}},instr[31:25],instr[11:7]};
-    imm_b = {{19{instr[31]}},instr[31],instr[7],instr[30:25],instr[11:8],1'b0};
-    imm_u = {instr[31:12],12'h0};
-    imm_j = {{11{instr[31]}},instr[31],instr[19:12],instr[20],instr[30:25],instr[24:21],1'b0};
+    imm_c = {27'h0, instr[19:15]};
+    imm_i = {{20{instr[31]}}, instr[31:20]};
+    imm_s = {{20{instr[31]}}, instr[31:25], instr[11:7]};
+    imm_b = {{19{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8], 1'b0};
+    imm_u = {instr[31:12], 12'h0};
+    imm_j = {{11{instr[31]}}, instr[31], instr[19:12], instr[20], instr[30:25], instr[24:21], 1'b0};
 
     imm = 0;
 
@@ -147,80 +145,82 @@ module decoder
     nonzero_imm_j = |imm_j;
 
     case (opcode)
-      opcode_lui : begin
-        imm = imm_u;
+      opcode_lui: begin
+        imm  = imm_u;
         wren = nonzero_waddr;
-        lui = 1;
+        lui  = 1;
       end
-      opcode_auipc : begin
-        imm = imm_u;
-        wren = nonzero_waddr;
+      opcode_auipc: begin
+        imm   = imm_u;
+        wren  = nonzero_waddr;
         auipc = 1;
       end
-      opcode_jal : begin
+      opcode_jal: begin
         wren = nonzero_waddr;
-        imm = imm_j;
-        jal = 1;
+        imm  = imm_j;
+        jal  = 1;
       end
-      opcode_jalr : begin
-        imm = imm_i;
-        wren = nonzero_waddr;
+      opcode_jalr: begin
+        imm   = imm_i;
+        wren  = nonzero_waddr;
         rden1 = 1;
-        jalr = 1;
+        jalr  = 1;
       end
-      opcode_branch : begin
+      opcode_branch: begin
         imm = imm_b;
         rden1 = 1;
         rden2 = 1;
         branch = 1;
         case (funct3)
-          funct_beq : bcu_op.bcu_beq = 1;
-          funct_bne : bcu_op.bcu_bne = 1;
-          funct_blt : bcu_op.bcu_blt = 1;
-          funct_bge : bcu_op.bcu_bge = 1;
-          funct_bltu : bcu_op.bcu_bltu = 1;
-          funct_bgeu : bcu_op.bcu_bgeu = 1;
-          default : valid = 0;
+          funct_beq: bcu_op.bcu_beq = 1;
+          funct_bne: bcu_op.bcu_bne = 1;
+          funct_blt: bcu_op.bcu_blt = 1;
+          funct_bge: bcu_op.bcu_bge = 1;
+          funct_bltu: bcu_op.bcu_bltu = 1;
+          funct_bgeu: bcu_op.bcu_bgeu = 1;
+          default: valid = 0;
         endcase
       end
-      opcode_load : begin
-        imm = imm_i;
-        wren = nonzero_waddr;
+      opcode_load: begin
+        imm   = imm_i;
+        wren  = nonzero_waddr;
         rden1 = 1;
-        load = 1;
+        load  = 1;
         case (funct3)
-          funct_lb : lsu_op.lsu_lb = 1;
-          funct_lh : lsu_op.lsu_lh = 1;
-          funct_lw : lsu_op.lsu_lw = 1;
-          funct_lbu : lsu_op.lsu_lbu = 1;
-          funct_lhu : lsu_op.lsu_lhu = 1;
-          default : valid = 0;
-        endcase;
+          funct_lb:  lsu_op.lsu_lb = 1;
+          funct_lh:  lsu_op.lsu_lh = 1;
+          funct_lw:  lsu_op.lsu_lw = 1;
+          funct_lbu: lsu_op.lsu_lbu = 1;
+          funct_lhu: lsu_op.lsu_lhu = 1;
+          default:   valid = 0;
+        endcase
+        ;
       end
-      opcode_store : begin
-        imm = imm_s;
+      opcode_store: begin
+        imm   = imm_s;
         rden1 = 1;
         rden2 = 1;
         store = 1;
         case (funct3)
-          funct_sb : lsu_op.lsu_sb = 1;
-          funct_sh : lsu_op.lsu_sh = 1;
-          funct_sw : lsu_op.lsu_sw = 1;
-          default : valid = 0;
-        endcase;
+          funct_sb: lsu_op.lsu_sb = 1;
+          funct_sh: lsu_op.lsu_sh = 1;
+          funct_sw: lsu_op.lsu_sw = 1;
+          default:  valid = 0;
+        endcase
+        ;
       end
-      opcode_immediate : begin
-        wren = nonzero_waddr;
+      opcode_immediate: begin
+        wren  = nonzero_waddr;
         rden1 = 1;
-        imm = imm_i;
+        imm   = imm_i;
         case (funct3)
-          funct_add : alu_op.alu_add = 1;
-          funct_slt : alu_op.alu_slt = 1;
-          funct_sltu : alu_op.alu_sltu = 1;
-          funct_and : alu_op.alu_and = 1;
-          funct_or : alu_op.alu_or = 1;
-          funct_xor : alu_op.alu_xor = 1;
-          funct_sll : begin
+          funct_add: alu_op.alu_add = 1;
+          funct_slt: alu_op.alu_slt = 1;
+          funct_sltu: alu_op.alu_sltu = 1;
+          funct_and: alu_op.alu_and = 1;
+          funct_or: alu_op.alu_or = 1;
+          funct_xor: alu_op.alu_xor = 1;
+          funct_sll: begin
             if (funct7 == 7'b0000000) begin
               alu_op.alu_sll = 1;
             end else if (funct7 == 7'b0100100) begin
@@ -255,7 +255,7 @@ module decoder
               valid = 0;
             end
           end
-          funct_srl : begin
+          funct_srl: begin
             if (funct7 == 7'b0000000) begin
               alu_op.alu_srl = 1;
             end else if (funct7 == 7'b0100000) begin
@@ -276,195 +276,206 @@ module decoder
               valid = 0;
             end
           end
-          default : valid = 0;
-        endcase;
+          default: valid = 0;
+        endcase
+        ;
       end
-      opcode_register : begin
-        wren = nonzero_waddr;
+      opcode_register: begin
+        wren  = nonzero_waddr;
         rden1 = 1;
         rden2 = 1;
         if (funct7 == 7'b0000000) begin
           case (funct3)
-            funct_add : alu_op.alu_add = 1;
-            funct_sll : alu_op.alu_sll = 1;
-            funct_srl : alu_op.alu_srl = 1;
-            funct_slt : alu_op.alu_slt = 1;
-            funct_sltu : alu_op.alu_sltu = 1;
-            funct_and : alu_op.alu_and = 1;
-            funct_or : alu_op.alu_or = 1;
-            funct_xor : alu_op.alu_xor = 1;
-            default : valid = 0;
-          endcase;
+            funct_add: alu_op.alu_add = 1;
+            funct_sll: alu_op.alu_sll = 1;
+            funct_srl: alu_op.alu_srl = 1;
+            funct_slt: alu_op.alu_slt = 1;
+            funct_sltu: alu_op.alu_sltu = 1;
+            funct_and: alu_op.alu_and = 1;
+            funct_or: alu_op.alu_or = 1;
+            funct_xor: alu_op.alu_xor = 1;
+            default: valid = 0;
+          endcase
+          ;
         end else if (funct7 == 7'b0100000) begin
           case (funct3)
-            funct_add : alu_op.alu_sub = 1;
-            funct_srl : alu_op.alu_sra = 1;
-            funct_and : begin
+            funct_add: alu_op.alu_sub = 1;
+            funct_srl: alu_op.alu_sra = 1;
+            funct_and: begin
               bitm = 1;
               bit_op.bit_zbb.bit_andn = 1;
             end
-            funct_or : begin
+            funct_or: begin
               bitm = 1;
               bit_op.bit_zbb.bit_orn = 1;
             end
-            funct_xor : begin
+            funct_xor: begin
               bitm = 1;
               bit_op.bit_zbb.bit_xnor = 1;
             end
-            default : valid = 0;
-          endcase;
+            default:   valid = 0;
+          endcase
+          ;
         end else if (funct7 == 7'b0010000) begin
           case (funct3)
-            funct_sh1add : begin
+            funct_sh1add: begin
               bitm = 1;
               bit_op.bit_zba.bit_sh1add = 1;
             end
-            funct_sh2add : begin
+            funct_sh2add: begin
               bitm = 1;
               bit_op.bit_zba.bit_sh2add = 1;
             end
-            funct_sh3add : begin
+            funct_sh3add: begin
               bitm = 1;
               bit_op.bit_zba.bit_sh3add = 1;
             end
-            default : valid = 0;
-          endcase;
+            default: valid = 0;
+          endcase
+          ;
         end else if (funct7 == 7'b0000101) begin
           case (funct3)
-            funct_clmul : begin
+            funct_clmul: begin
               bitm = 1;
               bitc = 1;
               bit_op.bit_zbc.bit_clmul_ = 1;
             end
-            funct_clmulr : begin
+            funct_clmulr: begin
               bitm = 1;
               bitc = 1;
               bit_op.bit_zbc.bit_clmulr = 1;
             end
-            funct_clmulh : begin
+            funct_clmulh: begin
               bitm = 1;
               bitc = 1;
               bit_op.bit_zbc.bit_clmulh = 1;
             end
-            funct_min : begin
+            funct_min: begin
               bitm = 1;
               bit_op.bit_zbb.bit_min = 1;
             end
-            funct_minu : begin
+            funct_minu: begin
               bitm = 1;
               bit_op.bit_zbb.bit_minu = 1;
             end
-            funct_max : begin
+            funct_max: begin
               bitm = 1;
               bit_op.bit_zbb.bit_max = 1;
             end
-            funct_maxu : begin
+            funct_maxu: begin
               bitm = 1;
               bit_op.bit_zbb.bit_maxu = 1;
             end
-            default : valid = 0;
-          endcase;
+            default: valid = 0;
+          endcase
+          ;
         end else if (funct7 == 7'b0100100) begin
           case (funct3)
-            funct_bclr : begin
+            funct_bclr: begin
               bitm = 1;
               bit_op.bit_zbs.bit_bclr = 1;
             end
-            funct_bext : begin
+            funct_bext: begin
               bitm = 1;
               bit_op.bit_zbs.bit_bext = 1;
             end
-            default : valid = 0;
-          endcase;
+            default: valid = 0;
+          endcase
+          ;
         end else if (funct7 == 7'b0010100) begin
           case (funct3)
-            funct_bset : begin
+            funct_bset: begin
               bitm = 1;
               bit_op.bit_zbs.bit_bset = 1;
             end
-            default : valid = 0;
-          endcase;
+            default: valid = 0;
+          endcase
+          ;
         end else if (funct7 == 7'b0110100) begin
           case (funct3)
-            funct_binv : begin
+            funct_binv: begin
               bitm = 1;
               bit_op.bit_zbs.bit_binv = 1;
             end
-            default : valid = 0;
-          endcase;
+            default: valid = 0;
+          endcase
+          ;
         end else if (funct7 == 7'b0110000) begin
           case (funct3)
-            funct_rol : begin
+            funct_rol: begin
               bitm = 1;
               bit_op.bit_zbb.bit_rol = 1;
             end
-            funct_ror : begin
+            funct_ror: begin
               bitm = 1;
               bit_op.bit_zbb.bit_ror = 1;
             end
-            default : valid = 0;
-          endcase;
+            default: valid = 0;
+          endcase
+          ;
         end else if (funct7 == 7'b0000100 && funct5 == 5'b00000) begin
           case (funct3)
-            funct_zexth : begin
+            funct_zexth: begin
               bitm = 1;
               bit_op.bit_zbb.bit_zexth = 1;
             end
-            default : valid = 0;
-          endcase;
+            default: valid = 0;
+          endcase
+          ;
         end else if (funct7 == 7'b0000001) begin
           case (funct3)
-            funct_mul : begin
+            funct_mul: begin
               mult = 1;
               mul_op.muls = 1;
             end
-            funct_mulh :  begin
+            funct_mulh: begin
               mult = 1;
               mul_op.mulh = 1;
             end
-            funct_mulhsu :  begin
+            funct_mulhsu: begin
               mult = 1;
               mul_op.mulhsu = 1;
             end
-            funct_mulhu :  begin
+            funct_mulhu: begin
               mult = 1;
               mul_op.mulhu = 1;
             end
-            funct_div :  begin
+            funct_div: begin
               division = 1;
               div_op.divs = 1;
             end
-            funct_divu :  begin
+            funct_divu: begin
               division = 1;
               div_op.divu = 1;
             end
-            funct_rem :  begin
-              division = 1;
+            funct_rem: begin
+              division   = 1;
               div_op.rem = 1;
             end
-            funct_remu :  begin
+            funct_remu: begin
               division = 1;
               div_op.remu = 1;
             end
-          endcase;
+          endcase
+          ;
         end
       end
-      opcode_fence : begin
+      opcode_fence: begin
         if (funct3 == 0) begin
           fence = 1;
         end else if (funct3 == 1) begin
           fence = 1;
         end
       end
-      opcode_system : begin
+      opcode_system: begin
         imm = imm_c;
         if (funct3 == 0) begin
           case (caddr)
-            csr_ecall : ecall = 1;
-            csr_ebreak : ebreak = 1;
-            csr_mret : mret = 1;
-            csr_wfi : wfi = 1;
-            default : valid = 0;
+            csr_ecall: ecall = 1;
+            csr_ebreak: ebreak = 1;
+            csr_mret: mret = 1;
+            csr_wfi: wfi = 1;
+            default: valid = 0;
           endcase
         end else if (funct3 == 1) begin
           wren = nonzero_waddr;
@@ -507,8 +518,9 @@ module decoder
           csreg = 1;
         end
       end
-      default : valid = 0;
-    endcase;
+      default: valid = 0;
+    endcase
+    ;
 
     if (instr == nop_instr) begin
       alu_op.alu_add = 0;
@@ -516,7 +528,7 @@ module decoder
     end
 
     if (bitm == 1) begin
-      imm = {27'h0,shamt};
+      imm = {27'h0, shamt};
     end
 
     decoder_out.imm = imm;

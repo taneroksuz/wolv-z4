@@ -1,44 +1,42 @@
 import constants::*;
 import wires::*;
 
-module execute_stage
-(
-  input logic reset,
-  input logic clock,
-  input alu_out_type alu_out,
-  output alu_in_type alu_in,
-  input lsu_out_type lsu_out,
-  output lsu_in_type lsu_in,
-  input csr_alu_out_type csr_alu_out,
-  output csr_alu_in_type csr_alu_in,
-  input div_out_type div_out,
-  output div_in_type div_in,
-  input mul_out_type mul_out,
-  output mul_in_type mul_in,
-  input bit_alu_out_type bit_alu_out,
-  output bit_alu_in_type bit_alu_in,
-  input bit_clmul_out_type bit_clmul_out,
-  output bit_clmul_in_type bit_clmul_in,
-  input fp_execute_out_type fp_execute_out,
-  output fp_execute_in_type fp_execute_in,
-  output register_write_in_type register_win,
-  output fp_register_write_in_type fp_register_win,
-  output forwarding_execute_in_type forwarding_ein,
-  output fp_forwarding_execute_in_type fp_forwarding_ein,
-  input csr_out_type csr_out,
-  output csr_execute_in_type csr_ein,
-  input fp_csr_out_type fp_csr_out,
-  output fp_csr_execute_in_type fp_csr_ein,
-  input mem_out_type dmem_out,
-  input execute_in_type a,
-  input execute_in_type d,
-  output execute_out_type y,
-  output execute_out_type q
+module execute_stage (
+    input logic reset,
+    input logic clock,
+    input alu_out_type alu_out,
+    output alu_in_type alu_in,
+    input lsu_out_type lsu_out,
+    output lsu_in_type lsu_in,
+    input csr_alu_out_type csr_alu_out,
+    output csr_alu_in_type csr_alu_in,
+    input div_out_type div_out,
+    output div_in_type div_in,
+    input mul_out_type mul_out,
+    output mul_in_type mul_in,
+    input bit_alu_out_type bit_alu_out,
+    output bit_alu_in_type bit_alu_in,
+    input bit_clmul_out_type bit_clmul_out,
+    output bit_clmul_in_type bit_clmul_in,
+    input fp_execute_out_type fp_execute_out,
+    output fp_execute_in_type fp_execute_in,
+    output register_write_in_type register_win,
+    output fp_register_write_in_type fp_register_win,
+    output forwarding_execute_in_type forwarding_ein,
+    output fp_forwarding_execute_in_type fp_forwarding_ein,
+    input csr_out_type csr_out,
+    output csr_execute_in_type csr_ein,
+    input fp_csr_out_type fp_csr_out,
+    output fp_csr_execute_in_type fp_csr_ein,
+    input mem_out_type dmem_out,
+    input execute_in_type a,
+    input execute_in_type d,
+    output execute_out_type y,
+    output execute_out_type q
 );
-  timeunit 1ns;
-  timeprecision 1ps;
+  timeunit 1ns; timeprecision 1ps;
 
-  execute_reg_type r,rin;
+  execute_reg_type r, rin;
   execute_reg_type v;
 
   always_comb begin
